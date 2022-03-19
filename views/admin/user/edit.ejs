@@ -1,0 +1,208 @@
+<%- include('./../layout/header.ejs'); %> 
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Users</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/admin">Home</a></li>
+              <li class="breadcrumb-item active">Users</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title"><%= (user.id)?'Edit':'Add' %> User</h3>
+              </div>
+              <!-- /.card-header -->
+              <form name="frmUser" id="frmUser" method="POST" action="<%= (user.id)?'/admin/user/edit/'+user.id:'add' %>" role="form" enctype="multipart/form-data">
+                <input type="hidden" name="id" value="<%= (user.id)?user.id:'' %>" class="hdnId">
+                <div class="card-body">
+                  
+                <div class="row">
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" name="name" id="txtName" value="<%= (user.name)?user.name:'' %>" class="form-control" placeholder="Enter Name">
+                        <%if(user.nameError) {%><label id="txtName-error" class="error" for="txtName"><%= user.nameError %></label><%}%>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" name="email" id="txtEmail" value="<%= (user.email)?user.email:'' %>" class="form-control" placeholder="Enter Email">
+                        <%if(user.emailError) {%><label id="txtEmail-error" class="error" for="txtEmail"><%= user.emailError %></label><%}%>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label>Phone</label>
+                        <input type="text" name="phone" id="txtPhone" value="<%= (user.phone)?user.phone:'' %>" class="form-control" placeholder="Enter Phone">
+                        <%if(user.phoneError) {%><label id="txtPhone-error" class="error" for="txtPhone"><%= user.phoneError %></label><%}%>
+                      </div>
+                    </div>
+
+                  </div>
+
+                <div class="row">
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" name="password" id="txtPassword" value="" class="form-control" placeholder="Enter Password">
+                      </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label>Confirm Password</label>
+                        <input type="password" name="password_confirm" id="txtConfirmPassword" value="" class="form-control" placeholder="Enter Confirm Password">
+                      </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                      <div name="status" id="selStatus" class="form-group">
+                        <label>Status</label>
+                        <select class="custom-select" >
+                          <option value="1">Active</option>
+                          <option value="0">Inactive</option>
+                        </select>
+                      </div>
+                    </div>
+
+                  </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label>Address</label>
+                        <textarea name="address" id="txtAddress" class="form-control" rows="3" placeholder="Enter Address"><%= (user.address)?user.address:'' %></textarea>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="profilePicFile">Profile Picture</label>
+                            <div class="input-group">
+                              <div class="custom-file">
+                                <input name="profile_pic" type="file" class="custom-file-input" id="profilePicFile">
+                                <label class="custom-file-label profile_pic_label" for="profilePicFile">Choose file</label>
+                            </div>
+                            <%if(user.imageError) {%><label id="profilePicFile-error" class="error" for="profilePicFile"><%= user.imageError %></label><%}%>
+                        </div>
+                    </div>
+                </div>
+
+                    <%if(user.profile_pic) {%>
+                    <div class="col-sm-3">
+                        <img src="/uploads/users/<%= user.profile_pic %>" class="imgPreview" alt="Profile Picture" width="50%">
+                    </div>
+                    <%}%>
+
+                  </div>
+
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+              </form>
+
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+
+
+<%- include('./../layout/footer.ejs'); %>
+
+<script type="text/javascript">
+    
+        $("#frmUser").validate({
+            rules: {
+                // "name": {
+                //     required: true
+                // },
+                // "email": {
+                //     required: true,
+                //     email: true,
+                //     // remote: "{{route('admin.user_email',[$id])}}"
+                // },
+                <%if(!user.id) {%>
+                "password": {
+                    required: true,
+                    minlength: 8,
+                    maxlength: 64
+                },
+                "password_confirm": {
+                    minlength: 8,
+                    maxlength: 64,
+                    equalTo: "#txtPassword"
+                },
+                <%}%>
+                "phone": {
+                    required: true,
+                    minlength: 9,
+                    maxlength: 13,
+                    number: true
+                },
+                // "address": {
+                //     required: true
+                // }
+            },
+            messages: {
+                // "name": {
+                //     required: "Please Enter Name"
+                // },
+                // "email": {
+                //     required: "Please Enter Email",
+                //     remote: "Email address already in use!"
+                // },
+                <%if(!user.id) {%>
+                "password": {
+                    required: "Please Enter Password"
+                },
+                "password_confirm": {
+                    required: "Please Enter Confirm Password"
+                },
+                <%}%>
+                "phone": {
+                    required: "Please Enter Phone Number",
+                    number: "Please enter numbers Only"
+                },
+                // "address": {
+                //     required: "Please Enter Address"
+                // }
+            }
+        });
+
+        $('#profilePicFile').change(function() {
+          var file = $('#profilePicFile')[0].files[0].name;
+          $('.profile_pic_label').text(file);
+      });
+</script>
+
+</body>
+</html>

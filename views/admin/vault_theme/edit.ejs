@@ -1,0 +1,144 @@
+<%- include('./../layout/header.ejs'); %>
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Vault_themes</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="/admin">Home</a></li>
+                            <li class="breadcrumb-item active">Vault_themes</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <%= (config.id)?'Edit':'Add' %>Vault_theme</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <form name="frmConfig" id="frmConfig" method="POST" action="<%= (config.id)?'/admin/vault_theme/edit/'+config.id:'add' %>" role="form" enctype="multipart/form-data">
+                                <input type="hidden" name="id" value="<%= (config.id)?config.id:'' %>" class="hdnId">
+                                <div class="card-body">
+
+
+                                    <div class="row">
+
+
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="vault_themeFile">vault_theme</label>
+                                                <div class="input-group">
+                                                    <div class="custom-file">
+                                                        <input name="vault_theme" type="file" class="custom-file-input" id="vault_theme" multiple>
+                                                        <label class="custom-file-label vaulttheme_label" for="vault_themeFile">Choose file</label>
+                                                    </div>
+                                                    <%if(config.imageError) {%><label id="vault_theme-error" class="error" for="vault_themeFile"><%= config.imageError %></label>
+                                                        <%}%>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <% if(config.status){ %>
+                                            <% config.vault_theme.forEach((image) => { %>
+                                              <div class="col-sm-2">
+                                                <span><button type="button" name="delete" id="<%= config.id %>" class="delete btn btn-dark btn-sm">×</i></button>
+                                                <img src="<%= image %>" class="imgPreview" alt="vault_theme img" width="60%"></span>
+                                                <!-- <a href="javascript:void(0)" class="col-sm-2" id="#ok_button" ><img src="<%= image %>" class="imgPreview" alt="vault img" width="60%">×</a> -->
+                                                 </div>
+                                              <% }) %>
+                                              <% } %>
+  
+                                    </div>
+
+
+                                </div>
+                        </div>
+
+                    </div>
+                    <!-- /.card-body -->
+
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                    </form>
+
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+    </div>
+    <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+    </div>
+
+    <div id="confirmModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h2 class="modal-title">Confirmation</h2>
+                </div>
+                <div class="modal-body">
+                    <h4 align="center" style="margin:0;">Are you sure you want to remove this image?</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" name="ok_button" id="ok_button" class="btn btn-danger">OK</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <%- include('./../layout/footer.ejs'); %>
+
+        <script type="text/javascript">
+            $('#vaultthemeFile').change(function() {
+                var file = $('#vault_themeFile')[0].files[0].name;
+                $('.vaulttheme_label').text(file);
+            });
+
+
+            var config_id;
+            $(document).on('click', '.delete', function() {
+                config_id = $(this).attr('id');
+                $('#confirmModal').modal('show');
+            });
+
+            $('#ok_button').click(function() {
+                $.ajax({
+                    url: "/admin/vault_theme/delete/" + config_id,
+                    beforeSend: function() {
+                        $('#ok_button').text('Deleting...');
+                    },
+                    success: function(data) {
+                        setTimeout(function() {
+                            $('#confirmModal').modal('hide');
+                            $('#vault_theme_table').DataTable().ajax.reload();
+                        }, 3000);
+                    }
+                })
+            });
+        </script>
+
+        </body>
+
+        </html>

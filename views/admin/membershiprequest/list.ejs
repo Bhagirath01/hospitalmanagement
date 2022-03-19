@@ -1,0 +1,236 @@
+<%- include('./../layout/header.ejs'); %> 
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+<link rel="stylesheet" href="/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+<link rel="stylesheet" href="/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Membership Request</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/admin">Home</a></li>
+              <li class="breadcrumb-item active">Membership Request</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Membership Request List</h3>
+              </div>
+
+              <!-- /.card-header -->
+              <div class="card-body">
+
+
+              <div class="row">
+                    <div class="col-3">
+                        <label class="control-label">Search</label>
+                        <input type="text" name="search_term" class="form-control" id="searchFilter" placeholder="" value=""  onkeyup="loadlistdata()">
+                    </div>
+<!-- 
+                    <div class="col-4">
+                        <label class="control-label">Registred between</label>
+                        <div id="reportrange" class="form-control">
+                            <input type="hidden" value="May 27, 2020 - June 25, 2020" name="filterdate"
+                            id="filterdate">
+                            <i class="fa fa-calendar"></i>&nbsp;
+                            <span>May 27, 2020 - June 25, 2020</span> <i class="fa fa-caret-down"></i>
+                        </div>
+                    </div>
+ -->
+                    
+            </div>
+
+                <table id="membershiprequest_table" class="table table-bordered table-striped" >
+                  <thead>
+                  <tr>
+                    <!-- <th width="5%">ID</th> -->
+                    
+                    <th width="15%">Name</th>
+                    <th width="15%">Email</th>
+                    <th width="5%">Action</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->  
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+
+  <div id="confirmModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h2 class="modal-title">Confirmation</h2>
+            </div>
+            <div class="modal-body">
+                <h4 align="center" style="margin:0;">Are you sure you want to Approved ?</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" name="yes_button" id="yes_button" class="btn btn-danger">Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<%- include('./../layout/footer.ejs'); %> 
+
+
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="/plugins/jszip/jszip.min.js"></script>
+<script src="/plugins/pdfmake/pdfmake.min.js"></script>
+<script src="/plugins/pdfmake/vfs_fonts.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+<script type="text/javascript">
+
+    var dtTable;
+    $(document).ready(function () {
+
+        dtTable = $('#membershiprequest_table').DataTable({
+            processing: true,
+            serverSide: true,
+            dom: '<"top"f>rt<"bottom"lp><"clear">',
+            searching: false,
+            // pageLength: 1,
+            order:[],
+            ajax: {
+                url: "/admin/membershiprequest/get-membershiprequests",
+                type: "GET",
+                data: function (d) {
+                   
+                    // d.filterdate = filterdate,
+                    d.search = $('#searchFilter').val();
+                },
+            },
+            columns: [
+            
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'email',
+                name: 'email'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false
+            }
+            ]
+        });
+
+        // setTimeout(function () {
+        //     loadlistdata();
+        // }, 1000);
+
+        // $('#reportrange').on('apply.daterangepicker', function (ev, picker) {
+        //     loadlistdata();
+        // });
+
+        //delete is halfdone
+        var membershiprequest_id;
+        $(document).on('click', '.approved', function () {
+            membershiprequest_id = $(this).attr('id');
+            $('#confirmModal').modal('show');
+        });
+
+        $('#yes_button').click(function () {
+            $.ajax({
+                url: "/admin/membershiprequest/approved/" +  membershiprequest_id,
+                beforeSend: function () {
+                    $('#yes_button').text('Approving...');
+                    
+                    
+                },
+                success: function (data) {
+                    setTimeout(function () {
+                        $('#confirmModal').modal('hide');
+                        $('#membershiprequest_table').DataTable().ajax.reload();
+                    }, 1000);
+                }
+            })
+        });
+
+    });
+
+    function loadlistdata() {
+        // $('#user_table').DataTable().ajax.reload().draw();
+        dtTable.ajax.reload();
+    }
+
+</script>
+
+<!-- <script type="text/javascript">
+    $(function () {
+
+        var start = moment().subtract(1, 'years');
+        var end = moment();
+
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            $('#filterdate').val(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        }
+
+        $('#reportrange').daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            },
+            locale: {
+                format: 'DD-MM-YYYY'
+            }
+        }, cb);
+        cb(start, end);
+    });
+</script> -->
+
+</body>
+</html>

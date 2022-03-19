@@ -1,0 +1,345 @@
+<%- include('./../layout/header.ejs'); %>
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Vehicles</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/admin">Home</a></li>
+              <li class="breadcrumb-item active">Vehicles</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">
+                  <%= (vehicle.id)?'Edit':'Add' %>Vehicle</h3>
+              </div>
+
+              <!-- /.card-header -->
+              <form name="frmVehicle" id="frmVehicle" method="POST"
+                action="<%= (vehicle.id)?'/admin/Vehicle/edit/'+vehicle.id:'add' %>" role="form"
+                enctype="multipart/form-data">
+                <input type="hidden" name="id" value="<%= (vehicle.id)?vehicle.id:'' %>" class="hdnId">
+                <div class="card-body">
+
+                  <div class="row">
+
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label>Vault</label>
+                        <select name="vaultId" id="txtvaultId" value="<%= (vehicle.vaultId)?vehicle.vaultId:'' %>"
+                          class="form-control" placeholder="Enter a vault">>
+                          <%if(vehicle.vaultIdError) {%><label id="txtVaultId-error" class="error" for="txtVaultId">
+                            <%= vehicle.vaultIdError %>
+                          </label>
+                          <%}%>
+                          <option value="" disabled selected>Please Select the Vault</option>
+                          <% vaults.forEach(function(vaultId) { %>
+                            <option value="<%= vaultId.id %>" <%= (vehicle.vaultId && vehicle.vaultId==i)?'selected':'' %>><%= vaultId.name %></option>
+                         <% }); %> 
+
+                          
+                          
+                        </select>
+                      </div>
+                    </div>
+
+
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label>Year of Manufacture</label>
+                        <select name="yearofmanufacture" id="txtYearofManufacture"
+                          value="<%= (vehicle.yearofmanufacture)?vehicle.yearofmanufacture:'' %>" class="form-control">
+                          <%if(vehicle.yearofmanufactureError) {%><label id="txtYearofManufacture-error" class="error"
+                              for="txtYearofManufacture">
+                              <%= vehicle.yearofmanufactureError %>
+                            </label>
+                            <%}%>
+                              <option disabled selected>Select Year</option>
+                              <% for(var i=1950; i <= new Date().getFullYear(); i++) { %>
+                              <option <%= (vehicle.yearofmanufacture && vehicle.yearofmanufacture==i)?'selected':'' %>><%= i %></option>
+                              <% } %>
+                             
+                        </select>
+
+                      </div>
+
+                    </div>
+
+                   
+
+                      <div class="col-sm-4">
+                      <div class="form-group">
+                        <label>Make</label>
+                        <select name="make" id="txtMake" value="<%= (vehicle.make)?vehicle.make:'' %>"
+                          class="form-control">
+                          <%if(vehicle.makeError) {%><label id="txtMake-error" class="error" for="txtMake">
+                              <%= vehicle.makeError %>
+                            </label>
+                            <%}%>
+                              <option disabled selected>Select Brand</option>
+                              <option  <%= (vehicle.make && vehicle.make=='Volvo')?'selected':'' %>>Volvo</option>
+                              <option <%= (vehicle.make && vehicle.make=='Benz')?'selected':'' %>>Benz</option>
+                              <option <%= (vehicle.make && vehicle.make=='Mercedes')?'selected':'' %>>Mercedes</option>
+                              <option <%= (vehicle.make && vehicle.make=='Audi')?'selected':'' %>>Audi</option>
+                        </select>
+
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label>Exteriorcolor</label>
+                        <input type="text" name="exteriorcolor" id="txtExteriorcolor"
+                          value="<%= (vehicle.exteriorcolor)?vehicle.exteriorcolor:'' %>" class="form-control"
+                          placeholder="Enter a Exteriorcolor">
+                        <%if(vehicle.exteriorcolorError) {%><label id="txtExteriorcolor-error" class="error"
+                            for="txtExteriorcolor">
+                            <%= vehicle.exteriorcolorError %>
+                          </label>
+                          <%}%>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label>Model</label>
+                        <select name="model" id="txtModel" value="<%= (vehicle.model)?vehicle.model:'' %>"
+                          class="form-control" placeholder="Enter a ModelName">
+                          <%if(vehicle.modelError) {%><label id="txtModel-error" class="error" for="txtModel">
+                            <%= vehicle.modelError %>
+                          </label>
+                          <%}%>
+                          <option disabled selected>Select Model</option>
+                          <option <%= (vehicle.model && vehicle.model=='Q5')?'selected':'' %>>Q5</option>
+                          <option <%= (vehicle.model && vehicle.model=='Q7')?'selected':'' %>>Q7</option>
+                          <option <%= (vehicle.model && vehicle.model=='Q9')?'selected':'' %>>Q9</option>
+                          <option <%= (vehicle.model && vehicle.model=='Q11')?'selected':'' %>>Q11</option>
+                        </select>
+                        
+                      </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label>Interiorcolor</label>
+                        <input type="text" name="interiorcolor" id="txtInteriorcolor"
+                          value="<%= (vehicle.interiorcolor)?vehicle.interiorcolor:'' %>" class="form-control"
+                          placeholder="interiorcolor">
+                        <%if(vehicle.interiorcolorError) {%><label id="txtInteriorcolor-error" class="error"
+                            for="txtInteriorcolor">
+                            <%= vehicle.interiorcolorError %>
+                          </label>
+                          <%}%>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div class="row">
+
+                    <div class="col-sm-2">
+                      <div class="form-group">
+                        <label>Vin</label>
+                        <select name="vin" id="txtVin" value="<%= (vehicle.vin)?vehicle.vin:'' %>" class="form-control">
+                          <%if(vehicle.vinError) {%><label id="txtVin-error" class="error" for="txtVin">
+                              <%= vehicle.vinError %>
+                            </label>
+                            <%}%>
+                              <option disabled selected>Enter VIN Number</option>
+                              <option <%= (vehicle.vin && vehicle.vin=='A')?'selected':'' %>>A</option>
+                              <option  <%= (vehicle.vin && vehicle.vin=='B')?'selected':'' %>>B</option>
+                              <option  <%= (vehicle.vin && vehicle.vin=='C')?'selected':'' %>>C</option>
+                              <option  <%= (vehicle.vin && vehicle.vin=='D')?'selected':'' %>>D</option>
+                        </select>
+
+                      </div>
+                      </div>
+
+                    <div class="col-sm-2">
+                      <div class="form-group">
+                        <label>Trim</label>
+                        <select name="trim" id="txtTrim" value="<%= (vehicle.trim)?vehicle.trim:'' %>"
+                          class="form-control" placeholder="Enter a trim">
+                          <%if(vehicle.trimError) {%><label id="txtTrim-error" class="error" for="txtTrim">
+                            <%= vehicle.trimError %>
+                          </label>
+                          <%}%>
+                         
+                          <option  disabled selected>Select Trim</option>
+                          <option <%= (vehicle.trim && vehicle.trim=='1')?'selected':'' %>>1</option>
+                          <option <%= (vehicle.trim && vehicle.trim=='2')?'selected':'' %>>2</option>
+                          <option <%= (vehicle.trim && vehicle.trim=='3')?'selected':'' %>>3</option>
+                          <option <%= (vehicle.trim && vehicle.trim=='4')?'selected':'' %>>4</option>
+                          <option <%= (vehicle.trim && vehicle.trim=='5')?'selected':'' %>>5</option>
+                        </select>
+                       
+                      </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label>Price</label>
+                        <input type="text" name="estimatevalue" id="txtEstimatevalue"
+                          value="<%= (vehicle.estimatevalue)?vehicle.estimatevalue:'' %>" class="form-control"
+                          placeholder="Enter Estimate Value ">
+                        <%if(vehicle.estimatevalueError) {%><label id="txtEstimatevalue-error" class="error"
+                            for="txtEstimatevalue">
+                            <%= vehicle.estimatevalueError %>
+                          </label>
+                          <%}%>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label>Mileage</label>
+                        <input type="text" name="mileage" id="txtMileage"
+                          value="<%= (vehicle.mileage)?vehicle.mileage:'' %>" class="form-control"
+                          placeholder="Enter a Mileage of the Vehicle">
+                        <%if(vehicle.mileageError) {%><label id="txtMileage-error" class="error" for="txtMileage">
+                            <%= vehicle.mileageError %>
+                          </label>
+                          <%}%>
+                      </div>
+                    </div>
+
+                  </div>
+
+
+                  <div class="row">
+
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label>Is this vehicle for sale ?</label>
+                        <select name="isthisvehicleforsale" id="txtIsthisvehicleforsale"
+                        value="<%= (vehicle.isthisvehicleforsale)?vehicle.isthisvehicleforsale:'' %>"
+                        class="form-control">
+                        <%if(vehicle.isthisvehicleforsaleError) {%><label id="txtIsthisvehicleforsale-error"
+                            class="error" for="txtIsthisvehicleforsale">
+                            <%= vehicle.isthisvehicleforsaleError %>
+                          </label>
+                          <%}%>
+                          <option disabled selected>Please Select</option>
+                          <option value=true <%= (vehicle.isthisvehicleforsale && vehicle.isthisvehicleforsale==true)?'selected':'' %>>Yes, this vehicle is available for sale</option>
+                          <option value=false <%= (vehicle.isthisvehicleforsale && vehicle.isthisvehicleforsale==false)?'selected':'' %>>No, I am not interested in selling right now</option>
+                          
+                        </select>
+                       
+                      </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" name="description" id="txtDescription"
+                          value="<%= (vehicle.description)?vehicle.description:'' %>" class="form-control"
+                          placeholder="description">
+                        <%if(vehicle.descriptionError) {%><label id="txtDescription-error" class="error"
+                            for="txtDescription">
+                            <%= vehicle.descriptionError %>
+                          </label>
+                          <%}%>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                      <div name="status" id="selStatus" class="form-group">
+                        <label>Status</label>
+                        <select class="custom-select" value="<%= (vehicle.status)?vehicle.status:'' %>">
+                          <option value="" disabled selected>User Status</option>
+                          <option value="1">Active</option>
+                          <option value="0">Inactive</option>
+                        </select>
+                      </div>
+                    </div>
+
+
+                  </div>
+                  <div class="row">
+
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label for="vehicleimg_videoFile">VehicleImgVideo</label>
+                        <div class="input-group">
+                          <div class="custom-file">
+                            <input name="vehicleimg_video" type="file" class="custom-file-input" id="vehicleimg_video"
+                              multiple>
+                            <label class="custom-file-label vehicleimg_video_label" for="vehicleimg_videoFile">Choose
+                              file</label>
+                          </div>
+                          <%if(vehicle.imageError) {%><label id="vehicleimg_video-error" class="error"
+                              for="vehicleimg_videoFile">
+                              <%= vehicle.imageError %>
+                            </label>
+                            <%}%>
+                        </div>
+                      </div>
+                    </div>
+
+                    <% if(vehicle.status){ %>
+                    
+                      <% vehicle.vehicleimg_video.forEach((image) => { %>
+                        <div class="col-sm-2">
+                        <img src="<%= image %>" class="imgPreview" alt="vehicle vehicleimg_video" width="60%">
+                      </div>
+                        <% }) %>
+                    
+                    <% } %>
+
+                   
+
+                  </div>
+                </div>
+            </div>
+
+          </div>
+          <!-- /.card-body -->
+
+          <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+          </form>
+
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+      </div>
+      <!-- /.col -->
+  </div>
+  <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+  </section>
+  <!-- /.content -->
+  </div>
+
+  <%- include('./../layout/footer.ejs'); %>
+
+    <script type="text/javascript">
+      $('#vehicleimg_videoFile').change(function () {
+        var file = $('#vehicleimg_videoFile')[0].files[0].name;
+        $('.vehicleimg_video_label').text(file);
+      });
+    </script>
+
+    </body>
+
+    </html>

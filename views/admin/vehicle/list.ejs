@@ -1,0 +1,247 @@
+<%- include('./../layout/header.ejs'); %> 
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+<link rel="stylesheet" href="/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+<link rel="stylesheet" href="/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Vehicles</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/admin">Home</a></li>
+              <li class="breadcrumb-item active">Vehicles</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Vehicles List</h3>
+              </div>
+
+              <!-- /.card-header -->
+              <div class="card-body">
+
+
+              <div class="row">
+                    <div class="col-3">
+                        <label class="control-label">Search</label>
+                        <input type="text" name="search_term" class="form-control" id="searchFilter" placeholder="" value=""  onkeyup="loadlistdata()">
+                    </div>
+<!-- 
+                    <div class="col-4">
+                        <label class="control-label">Registred between</label>
+                        <div id="reportrange" class="form-control">
+                            <input type="hidden" value="May 27, 2020 - June 25, 2020" name="filterdate"
+                            id="filterdate">
+                            <i class="fa fa-calendar"></i>&nbsp;
+                            <span>May 27, 2020 - June 25, 2020</span> <i class="fa fa-caret-down"></i>
+                        </div>
+                    </div>
+ -->
+                    <div class="col-2">
+                        <label class="control-label">Status</label>
+                        <select id="status" name="status" class="form-control" onchange="loadlistdata()">
+                            <option value="">ALL</option>
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                            
+                        </select>
+                    </div>
+            </div>
+
+                <table id="vehicle_table" class="table table-bordered table-striped">
+                  <thead>
+                  <tr>
+                    <!-- <th width="5%">ID</th> -->
+                    <th width="10%">Image</th>
+                    <th width="10%">Make</th>
+                    <th width="10%">Model</th>
+                    <th width="10%">Year of manufacture</th>
+                    <th width="10%">Price</th>
+                    <th width="10%">Vault</th>
+                    <th width="10%">Action</th>
+
+                  </tr>
+                  </thead>
+                  <tbody>
+
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+
+  <div id="confirmModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h2 class="modal-title">Confirmation</h2>
+            </div>
+            <div class="modal-body">
+                <h4 align="center" style="margin:0;">Are you sure you want to remove this data?</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" name="ok_button" id="ok_button" class="btn btn-danger">OK</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('./../layout/footer.ejs'); %> 
+
+
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="/plugins/jszip/jszip.min.js"></script>
+<script src="/plugins/pdfmake/pdfmake.min.js"></script>
+<script src="/plugins/pdfmake/vfs_fonts.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+<script type="text/javascript">
+
+var dtTable;
+    $(document).ready(function () {
+
+        dtTable = $('#vehicle_table').DataTable({
+            processing: true,
+            serverSide: true,
+            dom: '<"top"f>rt<"bottom"lp><"clear">',
+            searching: false,
+            // pageLength: 1,
+            order:[],
+            ajax: {
+                url: "/admin/vehicle/get-vehicles",
+                type: "GET",
+                data: function (d) {
+                    d.status = $('#status').val(),
+                    // d.filterdate = filterdate,
+                    d.search = $('#searchFilter').val();
+                },
+            },
+            columns: [
+            {
+                data: 'vehicleimg_video',
+                name: 'vehicleimg_video',
+                render: function (data, type, full, meta) {
+                    if (data != null) {
+                        return "<img src=/uploads/vehicles/" + data + " width='70' class='img-thumbnail' />";
+                    } else {
+                        return "<img src=/images/no-image.jpg width='70' class='img-thumbnail' />";
+                    }
+                },
+                orderable: false
+            },
+            {
+                data: 'make',
+                name: 'make'
+            },
+            {
+                data: 'model',
+                name: 'model'
+            },
+            {
+                data: 'yearofmanufacture',
+                name: 'yearofmanufacture'
+            },
+           
+           {
+                data: 'estimatevalue',
+                name: 'estimatevalue'
+            },
+            {
+                data: 'vaultId',
+                name: 'vaultId'
+            },
+            
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false
+            }
+            ]
+        });
+        var vehicle_id;
+        $(document).on('click', '.delete', function () {
+            vehicle_id = $(this).attr('id');
+            $('#confirmModal').modal('show');
+        });
+
+        $('#ok_button').click(function () {
+            $.ajax({
+                url: "/admin/vehicle/delete/" + vehicle_id,
+                beforeSend: function () {
+                    $('#ok_button').text('Deleting...');
+                },
+                success: function (data) {
+                    setTimeout(function () {
+                        $('#confirmModal').modal('hide');
+                        $('#vehicle_table').DataTable().ajax.reload();
+                    }, 3000);
+                }
+            })
+        });
+
+        $(document).on('click', '.toggle-class', function () {
+            var that = $(this);
+            var status = $(this).data('value') == 1 ? 0 : 1;
+            var classtype = $(this).data('value') == 1 ? 'btn-danger' : 'btn-success';
+            var textype = $(this).data('value') == 1 ? '<i class="fa fa-eye-slash" aria-hidden="true"></i>' : '<i class="fa fa-eye" aria-hidden="true"></i>';
+            var vehicle_id = $(this).data('id');
+            $.ajax({
+                type: "GET",
+                url: '/admin/vehicle/status/' + vehicle_id,
+                success: function (data) {
+                    if (data=='success') {
+                        that.data('value', status).removeClass('btn-danger').removeClass('btn-success').addClass(classtype).html(textype);
+                    }
+                }
+            });
+        })
+    });
+
+    function loadlistdata() {
+        // $('#user_table').DataTable().ajax.reload().draw();
+        dtTable.ajax.reload();
+    }
+
+</script>
+
+</body>
+</html>
+

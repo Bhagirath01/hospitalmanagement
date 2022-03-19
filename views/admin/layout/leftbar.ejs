@@ -1,0 +1,117 @@
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="/admin" class="brand-link">
+      <img src="/dist/img/AdminLTELogo.png" alt="Exclusive Vault" class="brand-image img-circle elevation-3" style="opacity: .8">
+      <span class="brand-text font-weight-light">Exclusive Vault</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+
+      <!-- SidebarSearch Form -->
+      <div class="form-inline">
+        <div class="input-group" data-widget="sidebar-search">
+          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+          <div class="input-group-append">
+            <button class="btn btn-sidebar">
+              <i class="fas fa-search fa-fw"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+
+          <li class="nav-item">
+            <a href="/admin/dashboard" class="nav-link <% if(typeof page_name != 'undefined' && page_name=='dashboard'){ %>active<% } %>">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                Dashboard
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="/admin/users" class="nav-link <% if(typeof page_name != 'undefined' && page_name=='user'){ %>active<% } %>">
+              <i class="nav-icon fas fa-user"></i>
+              <p>
+                Users
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="/admin/vaults" class="nav-link <% if(typeof page_name != 'undefined' && page_name=='vault'){ %>active<% } %>">
+              <i class="nav-icon fas fa-wallet"></i>
+              <p>
+                Vaults
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/admin/vehicles" class="nav-link <% if(typeof page_name != 'undefined' && page_name=='vehicle'){ %>active<% } %>">
+              <i class="nav-icon fas fa-car"></i>
+              <p>
+                Vehicles
+              </p>
+            </a>
+          </li>
+          <!-- <li class="nav-item">
+            <a href="/admin/membershiprequests" class="nav-link <% if(typeof page_name != 'undefined' && page_name=='membershiprequest'){ %>active<% } %>">
+              <i class="nav-icon fas fa-chess-king"></i>
+              <p>
+                Membership Request
+              </p>
+            </a>
+          </li> -->
+          <li class="nav-item">
+            <a href="/admin/vault_themes" class="nav-link <% if(typeof page_name != 'undefined' && page_name=='vault_theme'){ %>active<% } %>">
+              <i class="nav-icon fab fa-themeisle"></i>
+              <p>
+                Vault_Theme
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="/config/edit" class="nav-link <% if(typeof page_name != 'undefined' && page_name=='config'){ %>active<% } %>">
+              <i class="nav-icon fas fa-user-cog"></i>
+              <p>
+                Config
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="javascript:;" class="nav-link">
+              <i class="nav-icon fas fas fa-th"></i>
+              <p>
+                Products
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="javascript:;" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>List</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="javascript:;" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Add New</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>

@@ -1,0 +1,143 @@
+<%- include('./../layout/header.ejs'); %> 
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Vaults</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/admin">Home</a></li>
+              <li class="breadcrumb-item active">Vaults</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title"><%= (vault.id)?'Edit':'Add' %> Vault</h3>
+              </div>
+              <!-- /.card-header -->
+              <form name="frmVault" id="frmVault" method="POST" action="<%= (vault.id)?'/admin/vault/edit/'+vault.id:'add' %>" role="form" enctype="multipart/form-data">
+                <input type="hidden" name="id" value="<%= (vault.id)?vault.id:'' %>" class="hdnId">
+                <div class="card-body">
+
+                <div class="row">
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" name="name" id="txtName" value="<%= (vault.name)?vault.name:'' %>" class="form-control" placeholder="Enter a Vaultname">
+                        <%if(vault.nameError) {%><label id="txtName-error" class="error" for="txtName"><%= vault.nameError %></label><%}%>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label>Vehicle Owns</label>
+                        <input type="vehicleOwns" name="vehicleOwns" id="txtvehicleOwns" value="<%= (vault.vehicleOwns)?vault.vehicleOwns:'' %>" class="form-control" placeholder="Number of vehicle you Owns">
+                        <%if(vault.vehicleOwnsError) {%><label id="txtvehicleOwns-error" class="error" for="txtVehicleOwns"><%= vault.vehicleOwnsError %></label><%}%>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label>Comments</label>
+                        <select name="comments" id="txtComments" value="<%= (vault.comments)?vault.comments:'' %>" class="form-control">
+                          <%if(vault.commentsError) {%><label id="txtcomments-error" class="error" for="txtcomments"><%= vault.commentsError %></label><%}%>
+                          <option disabled selected >Select</option>
+                          <option value=true <%= (vault.comments && vault.comments==true)?'selected':'' %>>Yes</option>
+                          <option value=false <%= (vault.comments && vault.comments==false)?'selected':'' %>>No</option>
+                          
+                        </select>
+                        
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="row">
+
+                    <div class="col-sm-4">
+                      <div name="status" id="selStatus" class="form-group" value="<%= (vault.status)?vault.status:'' %>">
+                        <label>Status</label>
+                        <select class="custom-select" >
+                          
+                          <option disabled selected >Select</option>
+                          <option value="1" <%= (vault.status && vault.status=="1")?'selected':'' %>>Active</option>
+                          <option value="0" <%= (vault.status && vault.status=="0")?'selected':'' %>>Inactive</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                          <label for="imgFile">Img</label>
+                          <div class="input-group">
+                            <div class="custom-file">
+                              <input name="img" type="file" class="custom-file-input" id="img" multiple>
+                              <label class="custom-file-label img_label" for="imgFile">Choose file</label>
+                          </div>
+                          <%if(vault.imageError) {%><label id="img-error" class="error" for="imgFile"><%= vault.imageError %></label><%}%>
+                      </div>
+                  </div>
+              </div>
+
+              <% if(vault.status){ %>
+                <% vault.img.forEach((image) => { %>
+                  <div class="col-sm-2">
+                   <img src="<%= image %>" class="imgPreview" alt="vault img" width="60%">
+                     </div>
+                  <% }) %>
+                  <% } %>
+
+
+                  </div>
+
+                 
+                  </div>
+                  </div>
+
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+              </form>
+
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+
+
+<%- include('./../layout/footer.ejs'); %>
+
+<script type="text/javascript">
+    
+      
+        $('#imgFile').change(function() {
+          var file = $('#imgFile')[0].files[0].name;
+          $('.img_label').text(file);
+      });
+</script>
+
+</body>
+</html>
